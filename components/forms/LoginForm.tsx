@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getSession, signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -25,19 +26,32 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "admin@gmail.com",
+      password: "123456789",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      toast.success("Login successful");
+      const res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        const session = await getSession();
+        console.log("Session:", session);
+        toast.success("Login successful");
+      } else {
+        toast.error(`Login failed!`);
+      }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");
     }
   };
+
   return (
     <Form {...form}>
       <form

@@ -1,4 +1,4 @@
-import TiltCard from "@/components/common/TiltCard";
+import TiltCard from "@/components/cards/TiltCard";
 import LoginForm from "@/components/forms/LoginForm";
 
 const LoginPage = () => {

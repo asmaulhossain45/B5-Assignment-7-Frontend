@@ -7,7 +7,11 @@ type Props = {
 };
 
 const TiltCard = ({ children, className }: Props) => {
-  return <div className={cn(className)}>{children}</div>;
+  return (
+    <div className={cn(className, "border p-5 rounded-xl bg-card")}>
+      {children}
+    </div>
+  );
 };
 
 export default TiltCard;
