@@ -37,6 +37,10 @@ const Navbar = () => {
             src={MyLogo}
             alt="Asmaul Hossain Logo"
             className="h-10 w-fit"
+            width={100}
+            height={100}
+            priority={true}
+            loading="eager"
           />
         </Link>
 

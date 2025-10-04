@@ -47,7 +47,12 @@ const AppSidebar = async () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <Image src={MyLogo} alt="Asmaul Hossain Logo" className="h-10 w-fit" />
+        <Image
+          src={MyLogo}
+          alt="Asmaul Hossain Logo"
+          className="h-10 w-fit"
+          priority
+        />
       </SidebarHeader>
 
       <SidebarContent className="border-y">

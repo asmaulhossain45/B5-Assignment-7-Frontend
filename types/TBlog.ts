@@ -2,10 +2,11 @@ export type TBlog = {
   id: number;
   title: string;
   slug: string;
-  status: string;
   excerpt: string;
   content: string;
   thumb: string;
+  category: string;
+  status: string;
 
   views: number;
 

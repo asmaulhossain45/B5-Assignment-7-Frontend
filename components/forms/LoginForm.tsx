@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -16,13 +18,16 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { Spinner } from "../ui/spinner";
 
 const formSchema = z.object({
-  email: z.email(),
-  password: z.string(),
+  email: z.email("Enter a valid email address"),
+  password: z.string("Enter your password"),
 });
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,24 +37,23 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    try {
-      const res = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
+    setIsLoading(true);
 
-      if (res?.ok) {
-        const session = await getSession();
-        console.log("Session:", session);
-        toast.success("Login successful");
-      } else {
-        toast.error(`Login failed!`);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed");
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (res?.ok) {
+      toast.success("Login successful");
+      form.reset();
+      router.push("/dashboard");
+    } else {
+      toast.error("Login failed! Check your credentials.");
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -90,7 +94,9 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Login</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? <Spinner /> : "Login"}
+        </Button>
       </form>
     </Form>
   );
