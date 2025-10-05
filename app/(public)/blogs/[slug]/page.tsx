@@ -1,16 +1,36 @@
-type Props = {
+import BlogDetailsCard from "@/components/cards/BlogDetailsCard";
+import { baseApi } from "@/config/baseApi";
+import { TBlog } from "@/types/TBlog";
+
+type PageProps = {
   params: {
     slug: string;
   };
 };
 
-const BlogDetails = async ({ params }: Props) => {
-  const result = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API}/blog/${params.slug}`
-  );
-  const blog = await result.json();
-  console.log("Blog:", blog.data);
-  return <div>BlogDetails</div>;
+export const generateStaticParams = async () => {
+  const res = await fetch(`${baseApi}/public/blogs`);
+  const data = await res.json();
+
+  return data.data.map((blog: TBlog) => ({
+    slug: blog.slug,
+  }));
 };
 
-export default BlogDetails;
+const BlogDetailsPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
+
+  const res = await fetch(`${baseApi}/public/blogs/${slug}`, {
+    next: { tags: [`blog-${slug}`] },
+  });
+
+  const { data: blog }: { data: TBlog } = await res.json();
+
+  return (
+    <section>
+      {blog ? <BlogDetailsCard blog={blog} /> : <div>Blog not found</div>}
+    </section>
+  );
+};
+
+export default BlogDetailsPage;

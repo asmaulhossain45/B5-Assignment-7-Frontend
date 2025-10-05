@@ -1,4 +1,3 @@
-import { timeAgo } from "@/lib/timeAgo";
 import { cn } from "@/lib/utils";
 import DefaultImage from "@/public/default_image.jpg";
 import { TBlog } from "@/types/TBlog";
@@ -11,9 +10,10 @@ type Props = {
 };
 
 const BlogCard = ({ blog }: Props) => {
-  console.log("Blog:", blog);
   return (
-    <div className={cn("group border bg-card rounded-xl p-4 space-y-2")}>
+    <div
+      className={cn("group border bg-card rounded-xl p-4 flex flex-col gap-2")}
+    >
       <Image
         src={blog.thumb || DefaultImage}
         alt={blog.title || "Blog Image"}
@@ -27,7 +27,13 @@ const BlogCard = ({ blog }: Props) => {
 
       <div className="flex items-center justify-between gap-4 border-b pb-1">
         <h5 className="text-sm">Category</h5>
-        <span className="text-sm">{timeAgo(blog.publishedAt)}</span>
+        <span className="text-sm">
+          {new Date(blog.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </span>
       </div>
 
       <Link
@@ -37,13 +43,15 @@ const BlogCard = ({ blog }: Props) => {
         {blog.title}
       </Link>
 
-      <p className="text-foreground text-sm line-clamp-3">{blog.excerpt}</p>
+      <p className="flex-1 text-foreground text-sm line-clamp-3">
+        {blog.excerpt}
+      </p>
 
       <div className="flex items-center justify-between gap-4">
         <span className="text-sm">Views: {blog?.views || 0}</span>
 
         <Link href={`/blogs/${blog.slug}`}>
-          <Button variant={"default"} className="text-white">
+          <Button variant={"default"} className="cursor-pointer text-white">
             Read More
           </Button>
         </Link>

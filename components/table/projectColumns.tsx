@@ -2,35 +2,35 @@
 
 import { PostStatus } from "@/config/enums";
 import { cn } from "@/lib/utils";
-import { TBlog } from "@/types/TBlog";
+import { TProject } from "@/types/TProject";
 import { ColumnDef } from "@tanstack/react-table";
 import { EditIcon, EyeIcon, RotateCcwSquare, Trash2Icon } from "lucide-react";
 import Link from "next/link";
-import BlogViewModal from "../modal/BlogViewModal";
 import DeleteModal from "../modal/DeleteModal";
+import ProjectViewModal from "../modal/ProjectViewModal";
 import UpdateStatusModal from "../modal/UpdateStatusModal";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-export const blogColumns: ColumnDef<TBlog>[] = [
+export const projectColumns: ColumnDef<TProject>[] = [
   {
     accessorKey: "createdAt",
     header: () => (
       <>
         <span>Created Date</span>
         <br />
-        <span className="text-xs text-muted-foreground">Published At</span>
+        <span className="text-xs text-muted-foreground">Updated At</span>
       </>
     ),
     cell: ({ row }) => {
       const createdAt = new Date(row.original?.createdAt);
-      const publishedAt = new Date(row.original?.publishedAt);
+      const updatedAt = new Date(row.original?.updatedAt);
 
       return (
         <>
           <span>{createdAt.toDateString()}</span>
           <br />
           <span className="text-xs text-muted-foreground">
-            {publishedAt && publishedAt.toDateString()}
+            {updatedAt && updatedAt.toDateString()}
           </span>
         </>
       );
@@ -84,17 +84,17 @@ export const blogColumns: ColumnDef<TBlog>[] = [
     header: "Actions",
     meta: { className: "text-center" },
     cell: ({ row }) => {
-      const blog = row.original;
+      const project = row.original;
 
       return (
         <div className="flex items-center gap-2 justify-center">
-          <BlogViewModal blog={blog}>
+          <ProjectViewModal project={project}>
             <EyeIcon size={20} />
-          </BlogViewModal>
-          <Link href={`/dashboard/blogs/${blog.slug}`}>
+          </ProjectViewModal>
+          <Link href={`/dashboard/blogs/${project.slug}`}>
             <EditIcon size={20} className="text-warning" />
           </Link>
-          <UpdateStatusModal<TBlog> data={blog}>
+          <UpdateStatusModal<TProject> data={project}>
             <RotateCcwSquare size={20} className="text-success" />
           </UpdateStatusModal>
           <DeleteModal>

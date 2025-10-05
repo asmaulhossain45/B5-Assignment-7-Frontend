@@ -9,6 +9,7 @@ import {
   MessageCircleMore,
   Newspaper,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,6 +25,8 @@ const navLinks = [
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
   return (
     <header className="">
       <nav
@@ -46,10 +49,7 @@ const Navbar = () => {
 
         <ul className="flex items-center gap-6">
           {navLinks.map((item, index) => (
-            <li
-              key={index}
-              className={cn(index === navLinks.length - 1 && "hidden")}
-            >
+            <li key={index}>
               <Link
                 href={item.href}
                 className="group flex items-center gap-[6px]"
@@ -72,9 +72,9 @@ const Navbar = () => {
           ))}
         </ul>
 
-        <Link href={"/contact"}>
+        <Link href={session ? "/dashboard" : "/login"}>
           <Button size={"lg"} className="text-white">
-            Let't Talk
+            {session ? "Dashboard" : "Login"}
           </Button>
         </Link>
       </nav>

@@ -1,3 +1,10 @@
+export const RevalidateTag = {
+  BLOG: "blog",
+  PROJECT: "project",
+};
+
+export type RevalidateTag = (typeof RevalidateTag)[keyof typeof RevalidateTag];
+
 export const PostStatus = {
   DRAFT: "DRAFT",
   PUBLISHED: "PUBLISHED",
